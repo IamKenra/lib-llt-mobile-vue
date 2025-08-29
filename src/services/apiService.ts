@@ -2,8 +2,19 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 class ApiService {
   static init(): void {
-    axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || '/llt-svc';
+    const backendTarget = import.meta.env.VITE_BACKEND_TARGET || 'http://localhost:3000';
+    // Selalu gunakan VITE_BACKEND_TARGET untuk konstruksi URL backend
+    axios.defaults.baseURL = `${backendTarget}/llt-svc`;
+    console.log('🔧 ApiService initialized with baseURL:', axios.defaults.baseURL);
+    console.log('🔧 Backend target from env:', backendTarget);
+    
+    // Configure headers for CORS
     axios.defaults.headers.common['Content-Type'] = 'application/json';
+    axios.defaults.headers.common['Accept'] = 'application/json';
+    axios.defaults.withCredentials = false;
+    
+    // Configure timeout and other settings
+    axios.defaults.timeout = 10000;
     
     // Request interceptor untuk debugging
     axios.interceptors.request.use(
@@ -59,7 +70,15 @@ class ApiService {
   }
 
   static post<T>(resource: string, data: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-    return axios.post<T>(resource, data, config);
+    const corsConfig = {
+      ...config,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        ...config?.headers
+      }
+    };
+    return axios.post<T>(resource, data, corsConfig);
   }
 
   static put<T>(resource: string, data: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
