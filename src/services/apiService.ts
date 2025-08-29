@@ -2,11 +2,12 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 class ApiService {
   static init(): void {
-    const backendTarget = import.meta.env.VITE_BACKEND_TARGET || 'http://localhost:3000';
-    // Selalu gunakan VITE_BACKEND_TARGET untuk konstruksi URL backend
-    axios.defaults.baseURL = `${backendTarget}/llt-svc`;
+    // Gunakan VITE_API_BASE_URL (untuk proxy) atau fallback ke direct URL
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/llt-svc';
+    axios.defaults.baseURL = apiBaseUrl;
     console.log('🔧 ApiService initialized with baseURL:', axios.defaults.baseURL);
-    console.log('🔧 Backend target from env:', backendTarget);
+    console.log('🔧 VITE_API_BASE_URL from env:', import.meta.env.VITE_API_BASE_URL);
+    console.log('🔧 VITE_BACKEND_TARGET from env:', import.meta.env.VITE_BACKEND_TARGET);
     
     // Configure headers for CORS
     axios.defaults.headers.common['Content-Type'] = 'application/json';
