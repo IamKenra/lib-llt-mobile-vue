@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 class ApiService {
   static init(): void {
-    axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+    axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || '/llt-svc';
     axios.defaults.headers.common['Content-Type'] = 'application/json';
     
     // Request interceptor untuk debugging
